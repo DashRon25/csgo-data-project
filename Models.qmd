@@ -1,0 +1,117 @@
+---
+title: "Models"
+execute: 
+  echo: false
+---
+
+
+```{r}
+#| message: false
+library(tidyverse)
+library(patchwork)
+```
+
+```{r}
+#| message: false
+dmg <- read_csv("matchmaking_data/CS_Damage.csv")
+```
+
+```{r}
+dmg1 <- dmg |> 
+  group_by(wp) |>
+  summarize(
+    total_hp_damage = sum(hp_dmg, na.rm = TRUE),
+    average_hp_damage = mean(hp_dmg, na.rm = TRUE),
+    count = n()
+  ) |> 
+  arrange(desc(total_hp_damage))
+```
+```{r}
+weapon_categories <- tribble(
+  ~wp,           ~category,
+  "AK47",        "Rifle",
+  "M4A4",        "Rifle",
+  "M4A1",        "Rifle",
+  "Famas",       "Rifle",
+  "Gallil",      "Rifle",
+  "AUG",         "Rifle",
+  "SG556",       "Rifle",
+  "AWP",         "Sniper",
+  "Scout",       "Sniper",
+  "Scar20",      "Sniper",
+  "G3SG1",       "Sniper",
+  "Deagle",      "Pistol",
+  "USP",         "Pistol",
+  "Glock",       "Pistol",
+  "CZ",          "Pistol",
+  "P250",        "Pistol",
+  "FiveSeven",   "Pistol",
+  "P2000",       "Pistol",
+  "Tec9",        "Pistol",
+  "DualBarettas","Pistol",
+  "Zeus",        "Pistol",
+  "UMP",         "SMG",
+  "Mac10",       "SMG",
+  "MP9",         "SMG",
+  "MP7",         "SMG",
+  "P90",         "SMG",
+  "Bizon",       "SMG",
+  "Nova",        "Heavy",
+  "XM1014",      "Heavy",
+  "Swag7",       "Heavy",
+  "SawedOff",    "Heavy",
+  "M249",        "Heavy",
+  "Negev",       "Heavy",
+  "HE",          "Grenade",
+  "Molotov",     "Grenade",
+  "Incendiary",  "Grenade",
+  "Smoke",       "Grenade",
+  "Flash",       "Grenade",
+  "Bomb",        "Grenade"
+)
+```
+```{r}
+dmg2 <- dmg1 |> filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
+"Incendiary", "Unknown"))
+dmg2 |> 
+  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
+  geom_bar(stat = 'identity') + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) +
+  labs(
+    title = 'Average HP Damage by Weapon',
+    x = 'Weapon',
+    y = 'Average HP Damage'
+  )
+```
+```{r}
+dmg_full <- dmg1 |> left_join(weapon_categories, by = "wp")
+
+dmg_cat <- split(dmg_full, dmg_full$category)
+cat_rifles <- dmg_cat$Rifle
+cat_pistols <- dmg_cat$Pistol
+cat_sniper <- dmg_cat$Sniper
+cat_grenade <- dmg_cat$Grenade
+```
+```{r}
+pistol <- cat_pistols |>  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
+  geom_bar(stat = 'identity', width = .7) + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
+  labs(x = NULL, y = NULL)
+rifle <- cat_rifles |>  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
+  geom_bar(stat = 'identity') + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
+  labs(x = NULL, y = "Average HP Damage")
+sniper <- cat_sniper |>  ggplot(aes(x = reorder(wp, average_hp_damage), 
+  y = average_hp_damage)) +
+  geom_bar(stat = 'identity') + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
+  labs(x = "Weapon", y = NULL)
+
+combined_dmg <- sniper / rifle / pistol
+combined_dmg
+```
+
+
+
+
+

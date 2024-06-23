@@ -6,25 +6,15 @@ execute:
 
 
 ```{r}
+#| message: false
 library(tidyverse)
 ```
+
 ```{r}
-dmg <- read_csv("matchmaking_data/CS_Damage.csv")
-```
-```{r}
-weapon_damage_summary <- dmg |> 
-  group_by(wp) |> 
-  summarize(
-    total_hp_damage = sum(hp_dmg, na.rm = TRUE),
-    average_hp_damage = mean(hp_dmg, na.rm = TRUE),
-    count = n()
-  ) |>
-  arrange(desc(total_hp_damage))
-weapon_damage_summary
-```
-```{r}
+#| message: false
 kills <- read_csv("matchmaking_data/CS_Kills.csv")
 ```
+
 ```{r}
 kills_detailed <- kills |>
   group_by(wp) |>  
@@ -34,5 +24,6 @@ kills_detailed <- kills |>
   arrange(desc(kills))
 kills_detailed
 ```
+
 
 
