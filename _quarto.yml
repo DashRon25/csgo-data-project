@@ -10,7 +10,8 @@ website:
       - about.qmd
       - href: Models.qmd
         text: Models
-
+      - href: sources.qmd
+        text: sources
 format:
   html:
     theme: cosmo

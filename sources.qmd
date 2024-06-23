@@ -1,0 +1,6 @@
+---
+title: "Sources"
+---
+
+This project uses data from the Kaggle dataset https://www.kaggle.com/datasets/skihikingkevin/csgo-matchmaking-damage, which was last updated Sep 17, 2018. The project uses the data that lists how much damage was dealt each round. There were other datasets in the kaggle, but they were disregarded as they were not relevant to the objective of the project.
+Once the proper dataset was selected, it was then filtered to remove unnecessary variables such as tick second and attack position. A smaller dataset was made to distinguish each weapon by category, and merged with the filtered dataset. This was then used to split the set to compare each weapon's damage by category in their own tibbles/graph. A graph was made with a copy without the split to represent all of the weapons together.

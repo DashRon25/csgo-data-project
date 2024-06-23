@@ -72,7 +72,7 @@ weapon_categories <- tribble(
 ```
 ```{r}
 dmg2 <- dmg1 |> filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
-"Incendiary", "Unknown"))
+"Incendiary", "Unknown", "Knife"))
 dmg2 |> 
   ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
   geom_bar(stat = 'identity') + 
@@ -107,9 +107,16 @@ sniper <- cat_sniper |>  ggplot(aes(x = reorder(wp, average_hp_damage),
   theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
   labs(x = "Weapon", y = NULL)
 
-combined_dmg <- sniper / rifle / pistol
+combined_dmg <- pistol / rifle / sniper
 combined_dmg
 ```
+```{r}
+#| message: false
+kills <- read_csv("matchmaking_data/CS_Kills.csv")
+```
+
+
+
 
 
 

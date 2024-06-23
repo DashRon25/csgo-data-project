@@ -4,26 +4,45 @@ execute:
   echo: false
 ---
 
-
+CSGO(Counter Strike:Global Offensive) is a complicated tactical shooter game with a variety of weapons.This data was sourced from a kaggle dataset that had statistics from over 400,000 rounds of CSGO. The data was sorted, filtered, and split into multiple different smaller sets based on category to discover which weapons dealt the most damage. The data shows that AWP and Zeus tend to deal more damage out than any other.
 ```{r}
 #| message: false
 library(tidyverse)
 ```
-
 ```{r}
 #| message: false
-kills <- read_csv("matchmaking_data/CS_Kills.csv")
+dmg <- read_csv("matchmaking_data/CS_Damage.csv")
+```
+```{r}
+dmg1 <- dmg |> 
+  group_by(wp) |>
+  summarize(
+    total_hp_damage = sum(hp_dmg, na.rm = TRUE),
+    average_hp_damage = mean(hp_dmg, na.rm = TRUE),
+    count = n()
+  ) |> 
+  arrange(desc(total_hp_damage))
+```
+```{r}
+dmg2 <- dmg1 |> filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
+"Incendiary", "Unknown", "Knife"))
+dmg2 |> 
+  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
+  geom_bar(stat = 'identity') + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) +
+  labs(
+    title = 'Average HP Damage by Weapon',
+    x = 'Weapon',
+    y = 'Average HP Damage'
+  )
 ```
 
-```{r}
-kills_detailed <- kills |>
-  group_by(wp) |>  
-  summarize(kills = n(),
-            average_kills = mean(kills)
-            ) |>
-  arrange(desc(kills))
-kills_detailed
-```
+
+
+
+
+
+
 
 
 
