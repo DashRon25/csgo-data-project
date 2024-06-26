@@ -4,45 +4,31 @@ execute:
   echo: false
 ---
 
-CSGO(Counter Strike:Global Offensive) is a complicated tactical shooter game with a variety of weapons.This data was sourced from a kaggle dataset that had statistics from over 400,000 rounds of CSGO. The data was sorted, filtered, and split into multiple different smaller sets based on category to discover which weapons dealt the most damage. The data shows that AWP and Zeus tend to deal more damage out than any other.
+CSGO(Counter Strike:Global Offensive) is a complicated tactical shooter game with a variety of weapons.This data was sourced from a kaggle dataset that had statistics from over 400,000 rounds of CSGO. The data was sorted, filtered, and split into multiple different smaller sets based on category to discover which weapons were best in criteria such as most damage and most kills made. The data helped draw the conclusion that the AK47 and AWP are the best weapons in CSGO.
 ```{r}
 #| message: false
 library(tidyverse)
 ```
 ```{r}
 #| message: false
-dmg <- read_csv("matchmaking_data/CS_Damage.csv")
+kills <- read_csv("matchmaking_data/CS_Kills.csv")
 ```
 ```{r}
-dmg1 <- dmg |> 
-  group_by(wp) |>
-  summarize(
-    total_hp_damage = sum(hp_dmg, na.rm = TRUE),
-    average_hp_damage = mean(hp_dmg, na.rm = TRUE),
-    count = n()
-  ) |> 
-  arrange(desc(total_hp_damage))
+kills1 <- kills |> 
+  group_by(wp) |> 
+  summarize(kills = n()) |> 
+  arrange(desc(kills))
+
+kills_filtered <- kills1 |>  filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
+"Incendiary", "Unknown", "World"))
+
+kills_filtered$log_kills <- log10(kills_filtered$kills)
+
+# Heatmap with log-transformed kills
+ggplot(kills_filtered, aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(title = "Heatmap of Log-Transformed Kills per Weapon", subtitle = "This is logarithmically scaled", x = "Weapon", fill = "Total Kills", y = NULL) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
 ```
-```{r}
-dmg2 <- dmg1 |> filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
-"Incendiary", "Unknown", "Knife"))
-dmg2 |> 
-  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
-  geom_bar(stat = 'identity') + 
-  theme(axis.text.x = element_text(face = "bold", angle = 45)) +
-  labs(
-    title = 'Average HP Damage by Weapon',
-    x = 'Weapon',
-    y = 'Average HP Damage'
-  )
-```
-
-
-
-
-
-
-
-
-
-

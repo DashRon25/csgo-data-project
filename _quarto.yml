@@ -11,7 +11,7 @@ website:
       - href: Models.qmd
         text: Models
       - href: sources.qmd
-        text: sources
+        text: Sources
 format:
   html:
     theme: cosmo

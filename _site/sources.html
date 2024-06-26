@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About – CSGO Weapon Analysis</title>
+<title>Sources – CSGO Weapon Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,7 +93,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
@@ -101,7 +101,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Models</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./sources.html"> 
+    <a class="nav-link active" href="./sources.html" aria-current="page"> 
 <span class="menu-text">Sources</span></a>
   </li>  
 </ul>
@@ -115,22 +115,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#about-me" id="toc-about-me" class="nav-link active" data-scroll-target="#about-me">About Me</a></li>
-  <li><a href="#about-this-project" id="toc-about-this-project" class="nav-link" data-scroll-target="#about-this-project">About this Project</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About</h1>
+<h1 class="title">Sources</h1>
 </div>
 
 
@@ -147,16 +140,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about-me" class="level1">
-<h1>About Me</h1>
-<p>My name is Ronit Dash, and I will be a Junior at Chattahoochee High School. You can contact me at dash.ronit@gmail.com.</p>
-</section>
-<section id="about-this-project" class="level1">
-<h1>About this Project</h1>
-<p>This project was made as a part of <a href="https://bootcamp.davidkane.info/">Kane’s Data Science Bootcamp</a>. This project can also be found in <a href="https://github.com/DashRon25/csgo-data-project">this repository</a>.</p>
+<p>This project uses data from a Kaggle dataset by <a href="https://www.kaggle.com/datasets/skihikingkevin/csgo-matchmaking-damage/data">SkiHikingKevin</a>, which was last updated Sep 17, 2018.The project uses the data that lists how much damage was dealt each round. There were other datasets in the kaggle, but they were disregarded as they were not relevant to the objective of the project. Once the proper dataset was selected, it was then filtered to remove unnecessary variables such as tick second and attack position. A smaller dataset was made to distinguish each weapon by category, and merged with the filtered dataset. This was then used to split the set to compare each weapon’s damage by category in their own tibbles/graph. A graph was made with a copy without the split to represent all of the weapons together. This method was also used to make the graphs for kills, although a heatmap was used instead of a bar graph.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

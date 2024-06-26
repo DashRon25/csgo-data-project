@@ -50,6 +50,7 @@ weapon_categories <- tribble(
   "Tec9",        "Pistol",
   "DualBarettas","Pistol",
   "Zeus",        "Pistol",
+  "Revolver",    "Pistol",
   "UMP",         "SMG",
   "Mac10",       "SMG",
   "MP9",         "SMG",
@@ -70,19 +71,7 @@ weapon_categories <- tribble(
   "Bomb",        "Grenade"
 )
 ```
-```{r}
-dmg2 <- dmg1 |> filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
-"Incendiary", "Unknown", "Knife"))
-dmg2 |> 
-  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
-  geom_bar(stat = 'identity') + 
-  theme(axis.text.x = element_text(face = "bold", angle = 45)) +
-  labs(
-    title = 'Average HP Damage by Weapon',
-    x = 'Weapon',
-    y = 'Average HP Damage'
-  )
-```
+
 ```{r}
 dmg_full <- dmg1 |> left_join(weapon_categories, by = "wp")
 
@@ -90,33 +79,133 @@ dmg_cat <- split(dmg_full, dmg_full$category)
 cat_rifles <- dmg_cat$Rifle
 cat_pistols <- dmg_cat$Pistol
 cat_sniper <- dmg_cat$Sniper
+cat_heavy <- dmg_cat$Heavy
+cat_SMG <- dmg_cat$SMG
 cat_grenade <- dmg_cat$Grenade
+dmg2 <- dmg_full |> filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
+"Incendiary", "Unknown"))
+dmg2 |> 
+  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage, fill = category)) +
+  geom_bar(stat = 'identity') + scale_color_viridis_c() + theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) +
+  labs(
+    title = 'Average HP Damage by Weapon',
+    x = 'Weapon',
+    y = 'Average HP Damage', fill = NULL
+  )
 ```
+This graph represents a comparison of the average damage dealt throughout many rounds for every weapon. Some notable observations that could be made for this graph is that the Zeus is a weapon that is designed to one-shot, so it does full health and armor damage every time it hits someone, which is why its damage values are much higher than any other. The snipers are also at the high levels because they have high base damage values.
 ```{r}
-pistol <- cat_pistols |>  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
+pistol_dmg <- cat_pistols |>  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
   geom_bar(stat = 'identity', width = .7) + 
   theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
-  labs(x = NULL, y = NULL)
-rifle <- cat_rifles |>  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
+  labs(x = "Pistols", y = NULL)
+rifle_dmg <- cat_rifles |>  ggplot(aes(x = reorder(wp, average_hp_damage), y = average_hp_damage)) +
   geom_bar(stat = 'identity') + 
   theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
-  labs(x = NULL, y = "Average HP Damage")
-sniper <- cat_sniper |>  ggplot(aes(x = reorder(wp, average_hp_damage), 
+  labs(x = "Rifles", y = "Average HP Damage")
+SMG_dmg <- cat_SMG |> ggplot(aes(x = reorder(wp, average_hp_damage), 
   y = average_hp_damage)) +
   geom_bar(stat = 'identity') + 
   theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
-  labs(x = "Weapon", y = NULL)
-
-combined_dmg <- pistol / rifle / sniper
-combined_dmg
+  labs(x = "SMGs", y = NULL)
+heavy_dmg <- cat_heavy |> ggplot(aes(x = reorder(wp, average_hp_damage), 
+  y = average_hp_damage)) +
+  geom_bar(stat = 'identity') + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
+  labs(x = "Heavies", y = NULL)
+sniper_dmg <- cat_sniper |>  ggplot(aes(x = reorder(wp, average_hp_damage), 
+  y = average_hp_damage)) +
+  geom_bar(stat = 'identity') + 
+  theme(axis.text.x = element_text(face = "bold", angle = 45)) + theme_minimal() +
+  labs(x = "Snipers", y = NULL)
 ```
+# Graphs by category
+```{r}
+combined_dmg1 <- pistol_dmg / rifle_dmg / sniper_dmg
+combined_dmg1
+```
+These three graphs above show the HP Damage spread for the pistols, rifles, and snipers. Most of these average damage representations have similar trends to the total graph, as weapons with similar base damage values are close to each other in total damage. The AWP has much higher base damage than the other snipers, making it get the highest total damage. 
+```{r}
+combined_dmg2 <- heavy_dmg / SMG_dmg
+combined_dmg2
+```
+
 ```{r}
 #| message: false
 kills <- read_csv("matchmaking_data/CS_Kills.csv")
 ```
 
+```{r}
+kills1 <- kills |> 
+  group_by(wp) |> 
+  summarize(kills = n()) |> 
+  arrange(desc(kills))
+
+kills_filtered <- kills1 |>  filter(!wp %in% c("Smoke", "Flash", "Bomb", "Molotov", 
+"Incendiary", "Unknown", "World"))
+
+kills_filtered$log_kills <- log10(kills_filtered$kills)
+
+# Heatmap with log-transformed kills
+ggplot(kills_filtered, aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(title = "Heatmap of Log-Transformed Kills per Weapon", subtitle = "This is logarithmically scaled", x = "Weapon", fill = "Total Kills", y = NULL) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
 
 
+kills_full <- kills_filtered |> left_join(weapon_categories, by = "wp")
+kills_cat <- split(kills_full, kills_full$category)
+kcat_pistol <- kills_cat$Pistol
+kcat_rifle <- kills_cat$Rifle
+kcat_sniper <- kills_cat$Sniper
+kcat_heavy <- kills_cat$Heavy
+kcat_SMG <- kills_cat$SMG
+
+kpistol <- kcat_pistol |> ggplot(aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_color_viridis_b() +
+  labs(title = "Pistol Kills", x = "Weapon", y = NULL, fill = "Total Kills") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
+krifle <- kcat_rifle |> ggplot(aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_fill_gradient(low = "#e1f00e", high = "blue") +
+  labs(title = "Rifle Kills", x = "Weapon", y = NULL, fill = "Total Kills") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
+ksniper <- kcat_sniper |> ggplot(aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_fill_gradient(low = "#34d1cc", high = "#00eb0c") +
+  labs(title = "Sniper Kills", x = "Weapon", y = NULL, fill = "Total Kills") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
+kheavy <- kcat_heavy |> ggplot(aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_fill_gradient(low = "#e1f00e", high = "blue") +
+  labs(title = "Heavy Kills", x = "Weapon", y = NULL, fill = "Total Kills") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
+kSMG <- kcat_SMG |> ggplot(aes(x = reorder(wp, log_kills), y = "Kills", fill = log_kills)) +
+  geom_tile() +
+  scale_fill_gradient(low = "#e1f00e", high = "blue") +
+  labs(title = "SMG Kills", x = "Weapon", y = NULL, fill = "Total Kills") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.text.x = element_text(face = "bold", angle = 45))
+```
+```{r}
+kpistol
+
+krifle
+
+ksniper
+
+kheavy
+
+kSMG
+```
 
 
 

@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: f2fec559-6e91-4681-82b8-b73be2f6d372
+      url: 'https://dashr.quarto.pub/csgo-weapon-analysis'

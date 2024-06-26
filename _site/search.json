@@ -1,58 +1,30 @@
 [
   {
+    "objectID": "sources.html",
+    "href": "sources.html",
+    "title": "Sources",
+    "section": "",
+    "text": "This project uses data from a Kaggle dataset by SkiHikingKevin, which was last updated Sep 17, 2018.The project uses the data that lists how much damage was dealt each round. There were other datasets in the kaggle, but they were disregarded as they were not relevant to the objective of the project. Once the proper dataset was selected, it was then filtered to remove unnecessary variables such as tick second and attack position. A smaller dataset was made to distinguish each weapon by category, and merged with the filtered dataset. This was then used to split the set to compare each weapon’s damage by category in their own tibbles/graph. A graph was made with a copy without the split to represent all of the weapons together. This method was also used to make the graphs for kills, although a heatmap was used instead of a bar graph."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "CSGO Weapon Analysis",
     "section": "",
-    "text": "CSGO is a complicated tactical shooter game with a variety of weapons."
+    "text": "CSGO(Counter Strike:Global Offensive) is a complicated tactical shooter game with a variety of weapons.This data was sourced from a kaggle dataset that had statistics from over 400,000 rounds of CSGO. The data was sorted, filtered, and split into multiple different smaller sets based on category to discover which weapons were best in criteria such as most damage and most kills made. The data helped draw the conclusion that the AK47 and AWP are the best weapons in CSGO."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site"
+    "text": "About Me\nMy name is Ronit Dash, and I will be a Junior at Chattahoochee High School. You can contact me at dash.ronit@gmail.com.\n\n\nAbout this Project\nThis project was made as a part of Kane’s Data Science Bootcamp. This project can also be found in this repository."
   },
   {
     "objectID": "Models.html",
     "href": "Models.html",
     "title": "Models",
     "section": "",
-    "text": "Warning: `position_stack()` requires non-overlapping x intervals."
-  },
-  {
-    "objectID": "Models.knit.html",
-    "href": "Models.knit.html",
-    "title": "Models",
-    "section": "",
-    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\ndmg &lt;- read_csv(\"matchmaking_data/CS_Damage.csv\")\nweapon_damage_summary &lt;- dmg |&gt; \n  group_by(wp) |&gt; \n  summarize(\n    total_hp_damage = sum(hp_dmg, na.rm = TRUE),\n    average_hp_damage = mean(hp_dmg, na.rm = TRUE),\n    count = n()\n  ) |&gt;\n  arrange(desc(total_hp_damage))\n\nweapon_damage_summary\n\n# A tibble: 41 × 4\n   wp     total_hp_damage average_hp_damage  count\n   &lt;chr&gt;            &lt;dbl&gt;             &lt;dbl&gt;  &lt;int&gt;\n 1 AK47           9989721              31.6 315770\n 2 M4A4           3877496              25.9 149541\n 3 AWP            3387311              81.9  41378\n 4 Deagle         1979475              47.1  42012\n 5 USP            1436347              31.4  45695\n 6 Glock          1148509              26.4  43462\n 7 M4A1            996480              26.5  37623\n 8 CZ              940885              26.3  35719\n 9 HE              896832              19.3  46442\n10 P250            732527              29.6  24711\n# ℹ 31 more rows\nkills &lt;- read_csv(\"matchmaking_data/CS_Kills.csv\")"
-  },
-  {
-    "objectID": "Models.html#splitting-the-data-into-kills-per-weapon",
-    "href": "Models.html#splitting-the-data-into-kills-per-weapon",
-    "title": "Models",
-    "section": "splitting the data into kills per weapon,",
-    "text": "splitting the data into kills per weapon,"
-  },
-  {
-    "objectID": "Models.html#one-kill-occurs-each-row-of-the-dataset-so-the-kills-represent-the-number-of-rows",
-    "href": "Models.html#one-kill-occurs-each-row-of-the-dataset-so-the-kills-represent-the-number-of-rows",
-    "title": "Models",
-    "section": "one kill occurs each row of the dataset, so the kills represent the number of rows",
-    "text": "one kill occurs each row of the dataset, so the kills represent the number of rows\n\nkills_detailed &lt;- kills |&gt;\n  group_by(wp) |&gt;  \n  summarize(kills = n(),\n            average_kills = mean(kills)\n            ) |&gt;\n  arrange(desc(kills))\nkills_detailed\n\n# A tibble: 41 × 3\n   wp      kills average_kills\n   &lt;chr&gt;   &lt;int&gt;         &lt;dbl&gt;\n 1 AK47   367199        367199\n 2 M4A4   139053        139053\n 3 AWP    139005        139005\n 4 Deagle  64847         64847\n 5 USP     50727         50727\n 6 Glock   39515         39515\n 7 M4A1    35423         35423\n 8 CZ      29544         29544\n 9 P250    23946         23946\n10 Famas   23833         23833\n# ℹ 31 more rows"
-  },
-  {
-    "objectID": "Models.knit.html#splitting-the-data-into-kills-per-weapon",
-    "href": "Models.knit.html#splitting-the-data-into-kills-per-weapon",
-    "title": "Models",
-    "section": "splitting the data into kills per weapon,",
-    "text": "splitting the data into kills per weapon,"
-  },
-  {
-    "objectID": "Models.knit.html#one-kill-occurs-each-row-of-the-dataset-so-the-kills-represent-the-number-of-rows",
-    "href": "Models.knit.html#one-kill-occurs-each-row-of-the-dataset-so-the-kills-represent-the-number-of-rows",
-    "title": "Models",
-    "section": "one kill occurs each row of the dataset, so the kills represent the number of rows",
-    "text": "one kill occurs each row of the dataset, so the kills represent the number of rows\n\nkills_detailed &lt;- kills |&gt;\n  group_by(wp) |&gt;  \n  summarize(kills = n(),\n            average_kills = mean(kills)\n            ) |&gt;\n  arrange(desc(kills))\nkills_detailed\n\n# A tibble: 41 × 3\n   wp      kills average_kills\n   &lt;chr&gt;   &lt;int&gt;         &lt;dbl&gt;\n 1 AK47   367199        367199\n 2 M4A4   139053        139053\n 3 AWP    139005        139005\n 4 Deagle  64847         64847\n 5 USP     50727         50727\n 6 Glock   39515         39515\n 7 M4A1    35423         35423\n 8 CZ      29544         29544\n 9 P250    23946         23946\n10 Famas   23833         23833\n# ℹ 31 more rows"
+    "text": "This graph represents a comparison of the average damage dealt throughout many rounds for every weapon. Some notable observations that could be made for this graph is that the Zeus is a weapon that is designed to one-shot, so it does full health and armor damage every time it hits someone, which is why its damage values are much higher than any other. The snipers are also at the high levels because they have high base damage values.\n\nGraphs by category\n\n\n\n\n\n\n\n\n\nThese three graphs above show the HP Damage spread for the pistols, rifles, and snipers. Most of these average damage representations have similar trends to the total graph, as weapons with similar base damage values are close to each other in total damage. The AWP has much higher base damage than the other snipers, making it get the highest total damage."
   }
 ]

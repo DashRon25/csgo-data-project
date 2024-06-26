@@ -3,8 +3,7 @@ title: "About"
 ---
 # About Me
 My name is Ronit Dash, and I will be a Junior at Chattahoochee High School. You can contact me at dash.ronit@gmail.com.
-# About this Project
-This project was made as a part of Kane's Data Science 
-Bootcamp(https://bootcamp.davidkane.info/). This project can also be found at 
-https://github.com/DashRon25/csgo-data-project.
 
+
+# About this Project
+This project was made as a part of [Kane's Data Science Bootcamp](https://bootcamp.davidkane.info/). This project can also be found in [this repository](https://github.com/DashRon25/csgo-data-project).
